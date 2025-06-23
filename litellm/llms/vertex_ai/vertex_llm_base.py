@@ -296,8 +296,8 @@ class VertexBase:
         - (auth_header, url) - Tuple[Optional[str], str]
         """
         if api_base:
+            url = url.replace("https://generativelanguage.googleapis.com", api_base)
             if custom_llm_provider == "gemini":
-                url = "{}:{}".format(api_base, endpoint)
                 if gemini_api_key is None:
                     raise ValueError(
                         "Missing gemini_api_key, please set `GEMINI_API_KEY`"
@@ -305,12 +305,8 @@ class VertexBase:
                 auth_header = (
                     gemini_api_key  # cloudflare expects api key as bearer token
                 )
-            else:
-                url = "{}:{}".format(api_base, endpoint)
-
-            if stream is True:
-                url = url + "?alt=sse"
         return auth_header, url
+
 
     def _get_token_and_url(
         self,
